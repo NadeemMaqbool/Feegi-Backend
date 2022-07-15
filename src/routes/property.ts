@@ -1,4 +1,5 @@
-const express = require("express")
+import express from "express";
+import { HttpError } from "../models/http-errors";
 const router = express.Router()
 const properties  = [
     {
@@ -23,9 +24,8 @@ router.get('/:pid', (req, res, next) => {
     if (propertyList.length > 0 ) {
         return res.json({property: propertyList})
     }
-    const error = new Error("The property id does not exist")
-    error.code = 404
-    throw error
+    const error = new HttpError("The property id does not exist", 404)
+    return error
 })
 
-module.exports = router
+export default router
