@@ -4,6 +4,8 @@ import usersRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 import propertyRoutes from "./routes/property";
 import { HttpError } from "./models/http-errors";
+
+import {checkAuth} from './middleware/checkIfAuthenticated';
 import cors from 'cors';
 
 import "./utils/db_connection";
@@ -15,6 +17,9 @@ app.use(express.json());
 app.use(cors())
 
 app.use('/api/auth', authRoutes)
+
+app.use(checkAuth)
+
 app.use('/api/users', usersRoutes)
 
 //middleware to handle CORS

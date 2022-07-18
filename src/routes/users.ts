@@ -2,10 +2,9 @@ import express from "express"
 
 const router = express.Router()
 
-import {getAllUsers, getUserByUserId, storeUser} from '../controllers/UsersController'
+import {getAllUsers, getUserByUserId} from '../controllers/UsersController'
 
 router.get('/', getAllUsers);
-router.get('/:id', getUserByUserId);
-router.post('/', storeUser);
+router.get('/:uuid', getUserByUserId);
 
 export default router

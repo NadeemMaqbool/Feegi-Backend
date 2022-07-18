@@ -8,45 +8,20 @@ export const getAllUsers = (req, res, next) => {
 }
 
 export const getUserByUserId = (req, res, next) => {
-   return false
-}
+    const {userId} = req.params.uuid;
 
-export const storeUser = async (req, res, next) => {
-    const { email, password } = req.body
+    const user = User.findOne({ where: {uuid: userId }})
+                    .then(async user => {
+                        if (!user) {
+                            const error = new HttpError('User does not exist', 404)
+                            next(error)
+                        }
+
+                        return res.status(200).json({user})
+                    }).catch(err => {
+                        throw new HttpError(err.message, 400)
+                    })
     
-    if (!email.includes('@') || !email.includes('.')) {
-        const error = new HttpError('Invalid email format', 400);
-        return next(error);
-    }
-
-    if(password.length < 5) {
-        const error = new HttpError('Password must be at least 5 characters', 400);
-        return next(error);
-    }
-
-    const user = await User.findOne({ where: { email } })
-        .then(
-           async user => {
-                if (user) {
-                    const error = new HttpError( 'User already exists. Please use different email and try again.', 400)
-                    next(error)
-                }
-                const { firstName, lastName, email, password, userType } = req.body
-                const userCreate = User.create({
-                    uuid: uuid(),
-                    first_name: firstName,
-                    last_name: lastName,
-                    email,
-                    password: await bcrypt.hashSync(password, 10),
-                    user_type: userType
-                })
-                await userCreate.save().then(data => {
-                    res.status(201).json({data})
-                }).catch(err => {
-                    next(err)
-                })
-        .catch(err => {
-            throw new HttpError(err.message, 400)
-        })
-    })
 }
+
+
