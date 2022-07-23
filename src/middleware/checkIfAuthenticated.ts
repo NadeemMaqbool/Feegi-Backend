@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 
 export const checkAuth = (req, res, next) => {
     const token = req.headers.authentication.split(' ')[1] ///'Bearer token'
-    console.log(token)
     try {
         if (!token) {
             const error = new HttpError('Authentication has failed', 401)
